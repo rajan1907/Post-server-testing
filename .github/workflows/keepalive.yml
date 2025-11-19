@@ -1,0 +1,39 @@
+name: Raj-Mishra-24x7-Bot-CrashProof
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/10 * * * *"   # Restart every 10 min
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Python 3.12.2
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.12.2"
+
+    - name: Install Dependencies
+      run: |
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run script with auto restart on crash
+      continue-on-error: true
+      timeout-minutes: 350
+      run: |
+        echo "Starting Raj Mishra Crash-Proof Bot..."
+
+        while true
+        do
+            echo "Running main.py..."
+            python main.py
+
+            echo "❌ Script crashed or stopped. Restarting in 5 seconds..."
+            sleep 5
+        done
